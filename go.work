@@ -1,0 +1,11 @@
+go 1.22
+
+use (
+	pkg/env/envconfig
+	pkg/file/hcl
+	pkg/file/json
+	pkg/file/toml
+	pkg/file/yaml
+	_example
+	.
+)

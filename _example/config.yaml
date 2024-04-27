@@ -1,0 +1,4 @@
+myapp:
+  name: are we YAML yet?
+  backup_frequency: 5
+  version: 0.1.0
