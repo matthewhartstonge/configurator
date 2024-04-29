@@ -10,7 +10,7 @@ var _ configurator.ConfigImplementer = (*JSON)(nil)
 
 func New(config configurator.ConfigImplementer) *JSON {
 	return &JSON{
-		FileProvider: configurator.NewFileProvider(
+		ConfigFileType: configurator.NewConfigFileType(
 			config,
 			[]string{"json"},
 			json.Unmarshal,
@@ -19,5 +19,5 @@ func New(config configurator.ConfigImplementer) *JSON {
 }
 
 type JSON struct {
-	configurator.FileProvider
+	configurator.ConfigFileType
 }

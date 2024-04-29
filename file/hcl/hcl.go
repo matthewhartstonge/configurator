@@ -3,7 +3,7 @@ package hcl
 import (
 	"os"
 
-	"github.com/hashicorp/hcl/v2"
+	hcl "github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/hcl/v2/gohcl"
 	"github.com/hashicorp/hcl/v2/hclsyntax"
 
@@ -14,7 +14,7 @@ var _ configurator.ConfigImplementer = (*HCL)(nil)
 
 func New(config configurator.ConfigImplementer) *HCL {
 	h := &HCL{}
-	h.FileProvider = configurator.NewFileProvider(
+	h.ConfigFileType = configurator.NewConfigFileType(
 		config,
 		[]string{"hcl"},
 		unmarshal(h),
@@ -24,7 +24,7 @@ func New(config configurator.ConfigImplementer) *HCL {
 }
 
 type HCL struct {
-	configurator.FileProvider
+	configurator.ConfigFileType
 }
 
 // unmarshal is a helper function that returns a Unmarshaler for HCL files.

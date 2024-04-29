@@ -1,7 +1,7 @@
 package yaml
 
 import (
-	"gopkg.in/yaml.v3"
+	yaml "gopkg.in/yaml.v3"
 
 	"github.com/matthewhartstonge/configurator"
 )
@@ -10,7 +10,7 @@ var _ configurator.ConfigImplementer = (*YAML)(nil)
 
 func New(config configurator.ConfigImplementer) *YAML {
 	return &YAML{
-		FileProvider: configurator.NewFileProvider(
+		ConfigFileType: configurator.NewConfigFileType(
 			config,
 			[]string{"yaml", "yml"},
 			yaml.Unmarshal,
@@ -19,5 +19,5 @@ func New(config configurator.ConfigImplementer) *YAML {
 }
 
 type YAML struct {
-	configurator.FileProvider
+	configurator.ConfigFileType
 }

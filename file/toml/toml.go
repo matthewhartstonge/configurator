@@ -1,7 +1,7 @@
 package toml
 
 import (
-	"github.com/pelletier/go-toml/v2"
+	toml "github.com/pelletier/go-toml/v2"
 
 	"github.com/matthewhartstonge/configurator"
 )
@@ -10,7 +10,7 @@ var _ configurator.ConfigImplementer = (*TOML)(nil)
 
 func New(config configurator.ConfigImplementer) *TOML {
 	return &TOML{
-		FileProvider: configurator.NewFileProvider(
+		ConfigFileType: configurator.NewConfigFileType(
 			config,
 			[]string{"toml"},
 			toml.Unmarshal,
@@ -19,5 +19,5 @@ func New(config configurator.ConfigImplementer) *TOML {
 }
 
 type TOML struct {
-	configurator.FileProvider
+	configurator.ConfigFileType
 }
