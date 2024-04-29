@@ -5,11 +5,11 @@ import (
 	"time"
 
 	"github.com/matthewhartstonge/configurator"
-	"github.com/matthewhartstonge/configurator/envconfig"
-	"github.com/matthewhartstonge/configurator/hcl"
-	"github.com/matthewhartstonge/configurator/json"
-	"github.com/matthewhartstonge/configurator/toml"
-	"github.com/matthewhartstonge/configurator/yaml"
+	"github.com/matthewhartstonge/configurator/env/envconfig"
+	"github.com/matthewhartstonge/configurator/file/hcl"
+	"github.com/matthewhartstonge/configurator/file/json"
+	"github.com/matthewhartstonge/configurator/file/toml"
+	"github.com/matthewhartstonge/configurator/file/yaml"
 )
 
 type DomainConfig struct {
