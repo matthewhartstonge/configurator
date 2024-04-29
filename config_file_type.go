@@ -5,25 +5,29 @@ import (
 	"path/filepath"
 )
 
-// NewFileProvider provides most functionality required to support a new file
+// NewConfigFileType provides most functionality required to support a new file
 // type. If manual unmarshaling is required, the Unmarshaler can be provided.
-func NewFileProvider(config ConfigImplementer, fileExtensions []string, unmarshaler Unmarshaler) FileProvider {
-	return FileProvider{
+func NewConfigFileType(
+	config ConfigImplementer,
+	fileExtensions []string,
+	unmarshaler Unmarshaler,
+) ConfigFileType {
+	return ConfigFileType{
 		unmarshaler: unmarshaler,
 		Extensions:  fileExtensions,
 		ConfigType: ConfigType{
-			Data: config,
+			Config: config,
 		},
 	}
 }
 
-// Unmarshaler is a function that unmarshals a byte slice into a given interface.
+// Unmarshaler unmarshals a byte slice into the given interface.
 type Unmarshaler func(data []byte, v interface{}) error
 
-// FileProvider provides a ConfigImplementer that reads a file from disk and
-// unmarshals it into the Data field. Unmarshaling expects implementations to
+// ConfigFileType provides a ConfigImplementer that reads a file from disk and
+// unmarshals it into the Config field. Unmarshaling expects implementations to
 // match the standard library interface for Unmarshal.
-type FileProvider struct {
+type ConfigFileType struct {
 	// unmarshaler is a function that unmarshals a byte slice into a given
 	// interface.
 	unmarshaler Unmarshaler
@@ -37,7 +41,7 @@ type FileProvider struct {
 }
 
 // Stat checks if the file exists and computes the platform specific Path.
-func (f *FileProvider) Stat(cfg *Config, dirPath string) bool {
+func (f *ConfigFileType) Stat(cfg *Config, dirPath string) bool {
 	for _, ext := range f.Extensions {
 		cfgFilePath := dirPath + string(filepath.Separator) + cfg.FileName + "." + ext
 		if _, err := os.Stat(cfgFilePath); err == nil {
@@ -49,22 +53,12 @@ func (f *FileProvider) Stat(cfg *Config, dirPath string) bool {
 }
 
 // Parse reads the file based on the generated path computed from Stat and
-// unmarshals it into the Data field.
-func (f *FileProvider) Parse(_ *Config) error {
+// unmarshals it into the Config field.
+func (f *ConfigFileType) Parse(_ *Config) error {
 	file, err := os.ReadFile(f.Path)
 	if err != nil {
 		return err
 	}
 
-	return f.unmarshaler(file, f.Data)
-}
-
-// Validate calls the Data's validation function.
-func (f *FileProvider) Validate() error {
-	return f.Data.Validate()
-}
-
-// Merge calls the Data's merge function.
-func (f *FileProvider) Merge(t any) any {
-	return f.Data.Merge(t)
+	return f.unmarshaler(file, f.Config)
 }
