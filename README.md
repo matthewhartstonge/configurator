@@ -1,7 +1,7 @@
 <p align="center">
   <img alt="Configurator logo" src="assets/configurator-circle.png" height="150" />
   <h3 align="center">Configurator</h3>
-      <p align="center">Opinionated config validator, parser and merger for Go</p>
+  <p align="center">Opinionated config validator, parser and merger for Go</p>
 </p>
 
 ---
@@ -12,26 +12,9 @@ for applications across files, environment variables and cli flag arguments.
 
 ## Install `configurator`
 
-Install configurator core and then pull in your required parsers:
-Due to each parser pulling in 3rd-party dependencies, each is shipped as a
-separate module to keep your dependencies as slim as possible.
-
 ```shell
 # Core
 go get github.com/matthewhartstonge/configurator
-
-# Pick and choose:
-## File Parsers
-go get github.com/matthewhartstonge/configurator/hcl
-go get github.com/matthewhartstonge/configurator/json
-go get github.com/matthewhartstonge/configurator/toml
-go get github.com/matthewhartstonge/configurator/yaml
-
-## Environment Variable Parsers
-go get github.com/matthewhartstonge/configurator/envconfig
-
-## Flag Parsers
-# todo..
 ```
 
 ## Example
@@ -44,18 +27,25 @@ Documentation is hosted at [godoc](https://pkg.go.dev/github.com/matthewhartston
 
 ## Usage
 
+Each parser is stored in a separate package due to pulling in 3rd-party 
+dependencies. This ensures that your build is kept slim - includes what you need
+and nothing that you don't.
+
 ```go
-// Define your own ExampleFileConfig{}, ExampleEnvConfig{} and ExampleFlagConfig{}
+package main
+
+// Define your own FileConfig{}, EnvConfig{} and FlagConfig{}
+
 import (
     "fmt"
     "time"
     
     "github.com/matthewhartstonge/configurator"
-    "github.com/matthewhartstonge/configurator/envconfig"
-    "github.com/matthewhartstonge/configurator/hcl"
-    "github.com/matthewhartstonge/configurator/json"
-    "github.com/matthewhartstonge/configurator/toml"
-    "github.com/matthewhartstonge/configurator/yaml"
+    "github.com/matthewhartstonge/configurator/env/envconfig"
+    "github.com/matthewhartstonge/configurator/file/hcl"
+    "github.com/matthewhartstonge/configurator/file/json"
+    "github.com/matthewhartstonge/configurator/file/toml"
+    "github.com/matthewhartstonge/configurator/file/yaml"
 )
 
 func main() {
@@ -84,5 +74,5 @@ func main() {
 ## Todo
 
 - [ ] CLI Flag parsing
-- [ ] Structured diagnotic error reporting
+- [ ] Structured diagnostic error reporting
 - [ ] Full documentation for developer happiness
