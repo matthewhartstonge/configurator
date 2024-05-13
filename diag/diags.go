@@ -1,4 +1,4 @@
-// Package diags provides functionality to build a diagnostic understanding of
+// Package diag provides functionality to build a diagnostic understanding of
 // user-supplied configuration values across multiple sources, including global
 // config files, environment variables, local config files, and CLI flags.
 //
@@ -8,7 +8,7 @@
 // and the underlying configuration values across various sources by providing
 // a unified interface for collecting diagnostic information.
 //
-// By offering a consistent way to manage diagnostic information, diags helps
+// By offering a consistent way to manage diagnostic information, diag helps
 // end-users ensure that the application they are attempting to run is
 // configured correctly. Diags helps to make configuration debuggable by
 // understanding the exact source of where configuration is being overridden or
@@ -20,7 +20,7 @@
 //
 // # Features
 //
-// The main features of the diags package include:
+// The main features of the diag package include:
 //
 //   - Support for multiple configuration sources: Diags provides an API to
 //     aggregate configuration values from global config files, environment
@@ -35,6 +35,6 @@
 // Diags simplifies the process of user configuration of Go applications
 // by providing a unified interface for developers to help diagnose and report
 // configuration settings from multiple sources.
-// By using diags, developers can ensure that applications are easier to
+// By using diag, developers can ensure that applications are easier to
 // configure, maintain and self error-correct for end-users.
-package diags
+package diag

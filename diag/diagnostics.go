@@ -1,4 +1,4 @@
-package diags
+package diag
 
 // Diagnostics contains a report of diagnostic information.
 type Diagnostics []Diagnostic

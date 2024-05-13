@@ -1,4 +1,4 @@
-package diags
+package diag
 
 // Severity specifies the diagnostic logging level.
 type Severity int
