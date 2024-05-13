@@ -8,6 +8,35 @@ func (d *Diagnostics) Append(diags ...Diagnostic) {
 	*d = append(*d, diags...)
 }
 
+// GlobalFile enables building up a diagnostic message for a global
+// configuration file value.
+func (d *Diagnostics) GlobalFile(path string) *Builder {
+	return d.builder(ComponentGlobalFile, path)
+}
+
+// Env enables building up a diagnostic message for an environment variable value.
+func (d *Diagnostics) Env(path string) *Builder {
+	return d.builder(ComponentEnvVar, path)
+}
+
+// LocalFile enables building up a diagnostic message for a local configuration
+// file value.
+func (d *Diagnostics) LocalFile(path string) *Builder {
+	return d.builder(ComponentLocalFile, path)
+}
+
+// Flag enables building up a diagnostic message for a CLI flag value.
+func (d *Diagnostics) Flag(path string) *Builder {
+	return d.builder(ComponentFlag, path)
+}
+
+func (d *Diagnostics) builder(component Component, path string) *Builder {
+	return &Builder{
+		d: d,
+		e: &Diagnostic{Component: component, Path: path},
+	}
+}
+
 // Fatals returns all diagnostic entries at SeverityFatal level.
 func (d *Diagnostics) Fatals() []Diagnostic {
 	return d.getDiagsWithLevel(SeverityFatal)
