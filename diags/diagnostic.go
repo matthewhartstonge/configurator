@@ -19,7 +19,7 @@ type Diagnostic struct {
 func (d Diagnostic) Error() string {
 	var buf strings.Builder
 
-	_, _ = fmt.Fprintf(&buf, "%s:", d.Severity)
+	_, _ = fmt.Fprintf(&buf, "%s:", strings.ToUpper(d.Severity.String()))
 
 	if component := d.Component.String(); componentInvalid.String() != component {
 		_, _ = fmt.Fprintf(&buf, " (%s)", component)
@@ -29,10 +29,12 @@ func (d Diagnostic) Error() string {
 		_, _ = fmt.Fprintf(&buf, " [%s]", d.Path)
 	}
 
-	_, _ = fmt.Fprintf(&buf, " %s", d.Summary)
+	_, _ = fmt.Fprintf(&buf, " Summary: \"%s\"", d.Summary)
 	if d.Detail != "" {
-		_, _ = fmt.Fprintf(&buf, "\n\n%s", d.Detail)
+		_, _ = fmt.Fprintf(&buf, " Detail: \"%s\"", d.Detail)
 	}
+
+	_, _ = fmt.Fprintln(&buf)
 
 	return buf.String()
 }
