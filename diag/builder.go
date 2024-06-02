@@ -8,31 +8,31 @@ type Builder struct {
 	e *Diagnostic
 }
 
-func (b *Builder) Fatal(summary, detail string) *Diagnostics {
+func (b *Builder) Fatal(summary, detail string) Diagnostics {
 	return b.build(SeverityFatal, summary, detail)
 }
 
-func (b *Builder) Error(summary, detail string) *Diagnostics {
+func (b *Builder) Error(summary, detail string) Diagnostics {
 	return b.build(SeverityError, summary, detail)
 }
 
-func (b *Builder) Warn(summary, detail string) *Diagnostics {
+func (b *Builder) Warn(summary, detail string) Diagnostics {
 	return b.build(SeverityWarn, summary, detail)
 }
 
-func (b *Builder) Info(summary, detail string) *Diagnostics {
+func (b *Builder) Info(summary, detail string) Diagnostics {
 	return b.build(SeverityInfo, summary, detail)
 }
 
-func (b *Builder) Debug(summary, detail string) *Diagnostics {
+func (b *Builder) Debug(summary, detail string) Diagnostics {
 	return b.build(SeverityDebug, summary, detail)
 }
 
-func (b *Builder) Trace(summary, detail string) *Diagnostics {
+func (b *Builder) Trace(summary, detail string) Diagnostics {
 	return b.build(SeverityTrace, summary, detail)
 }
 
-func (b *Builder) build(sev Severity, summary, detail string) *Diagnostics {
+func (b *Builder) build(sev Severity, summary, detail string) Diagnostics {
 	diags, diag := b.d, b.e
 
 	diag.Severity = sev
@@ -41,5 +41,5 @@ func (b *Builder) build(sev Severity, summary, detail string) *Diagnostics {
 
 	diags.Append(*diag)
 
-	return diags
+	return *diags
 }
