@@ -8,36 +8,36 @@ type Builder struct {
 	e *Diagnostic
 }
 
-func (b *Builder) Fatal(detail, summary string) *Diagnostics {
-	return b.build(SeverityFatal, detail, summary)
+func (b *Builder) Fatal(summary, detail string) *Diagnostics {
+	return b.build(SeverityFatal, summary, detail)
 }
 
-func (b *Builder) Error(detail, summary string) *Diagnostics {
-	return b.build(SeverityError, detail, summary)
+func (b *Builder) Error(summary, detail string) *Diagnostics {
+	return b.build(SeverityError, summary, detail)
 }
 
-func (b *Builder) Warn(detail, summary string) *Diagnostics {
-	return b.build(SeverityWarn, detail, summary)
+func (b *Builder) Warn(summary, detail string) *Diagnostics {
+	return b.build(SeverityWarn, summary, detail)
 }
 
-func (b *Builder) Info(detail, summary string) *Diagnostics {
-	return b.build(SeverityInfo, detail, summary)
+func (b *Builder) Info(summary, detail string) *Diagnostics {
+	return b.build(SeverityInfo, summary, detail)
 }
 
-func (b *Builder) Debug(detail, summary string) *Diagnostics {
-	return b.build(SeverityDebug, detail, summary)
+func (b *Builder) Debug(summary, detail string) *Diagnostics {
+	return b.build(SeverityDebug, summary, detail)
 }
 
-func (b *Builder) Trace(detail, summary string) *Diagnostics {
-	return b.build(SeverityTrace, detail, summary)
+func (b *Builder) Trace(summary, detail string) *Diagnostics {
+	return b.build(SeverityTrace, summary, detail)
 }
 
-func (b *Builder) build(sev Severity, detail, summary string) *Diagnostics {
+func (b *Builder) build(sev Severity, summary, detail string) *Diagnostics {
 	diags, diag := b.d, b.e
 
 	diag.Severity = sev
-	diag.Detail = detail
 	diag.Summary = summary
+	diag.Detail = detail
 
 	diags.Append(*diag)
 
