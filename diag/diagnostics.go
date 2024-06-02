@@ -38,38 +38,38 @@ func (d *Diagnostics) builder(component Component, path string) *Builder {
 }
 
 // Fatals returns all diagnostic entries at SeverityFatal level.
-func (d *Diagnostics) Fatals() []Diagnostic {
+func (d *Diagnostics) Fatals() Diagnostics {
 	return d.getDiagsWithLevel(SeverityFatal)
 }
 
 // Errors returns all diagnostic entries at SeverityError level.
-func (d *Diagnostics) Errors() []Diagnostic {
+func (d *Diagnostics) Errors() Diagnostics {
 	return d.getDiagsWithLevel(SeverityError)
 }
 
 // Warnings returns all diagnostic entries at SeverityWarn level.
-func (d *Diagnostics) Warnings() []Diagnostic {
+func (d *Diagnostics) Warnings() Diagnostics {
 	return d.getDiagsWithLevel(SeverityWarn)
 }
 
 // Infos returns all diagnostic entries at SeverityInfo level.
-func (d *Diagnostics) Infos() []Diagnostic {
+func (d *Diagnostics) Infos() Diagnostics {
 	return d.getDiagsWithLevel(SeverityInfo)
 }
 
 // Debugs returns all diagnostic entries at SeverityDebug level.
-func (d *Diagnostics) Debugs() []Diagnostic {
+func (d *Diagnostics) Debugs() Diagnostics {
 	return d.getDiagsWithLevel(SeverityDebug)
 }
 
 // Traces returns all diagnostic entries at SeverityTrace level.
-func (d *Diagnostics) Traces() []Diagnostic {
+func (d *Diagnostics) Traces() Diagnostics {
 	return d.getDiagsWithLevel(SeverityTrace)
 }
 
 // getDiagsWithLevel returns an array of diagnostics that match the specified
 // severity level.
-func (d Diagnostics) getDiagsWithLevel(sev Severity) []Diagnostic {
+func (d Diagnostics) getDiagsWithLevel(sev Severity) Diagnostics {
 	var diags Diagnostics
 	for _, diag := range d {
 		if diag.Severity != sev {
