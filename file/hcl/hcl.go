@@ -10,7 +10,7 @@ import (
 	"github.com/matthewhartstonge/configurator"
 )
 
-var _ configurator.ConfigImplementer = (*HCL)(nil)
+var _ configurator.ConfigTypeable = (*HCL)(nil)
 
 func New(config configurator.ConfigImplementer) *HCL {
 	h := &HCL{}
@@ -25,6 +25,10 @@ func New(config configurator.ConfigImplementer) *HCL {
 
 type HCL struct {
 	configurator.ConfigFileType
+}
+
+func (h HCL) String() string {
+	return "HCL Configurator"
 }
 
 // unmarshal is a helper function that returns a Unmarshaler for HCL files.

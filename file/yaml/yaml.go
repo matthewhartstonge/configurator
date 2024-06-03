@@ -6,7 +6,7 @@ import (
 	"github.com/matthewhartstonge/configurator"
 )
 
-var _ configurator.ConfigImplementer = (*YAML)(nil)
+var _ configurator.ConfigTypeable = (*YAML)(nil)
 
 func New(config configurator.ConfigImplementer) *YAML {
 	return &YAML{
@@ -20,4 +20,8 @@ func New(config configurator.ConfigImplementer) *YAML {
 
 type YAML struct {
 	configurator.ConfigFileType
+}
+
+func (y YAML) String() string {
+	return "YAML configurator"
 }

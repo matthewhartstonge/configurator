@@ -6,7 +6,7 @@ import (
 	"github.com/matthewhartstonge/configurator"
 )
 
-var _ configurator.ConfigImplementer = (*JSON)(nil)
+var _ configurator.ConfigTypeable = (*JSON)(nil)
 
 func New(config configurator.ConfigImplementer) *JSON {
 	return &JSON{
@@ -20,4 +20,8 @@ func New(config configurator.ConfigImplementer) *JSON {
 
 type JSON struct {
 	configurator.ConfigFileType
+}
+
+func (j JSON) String() string {
+	return "JSON configurator"
 }

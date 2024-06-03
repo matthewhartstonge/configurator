@@ -6,7 +6,7 @@ import (
 	"github.com/matthewhartstonge/configurator"
 )
 
-var _ configurator.ConfigImplementer = (*TOML)(nil)
+var _ configurator.ConfigTypeable = (*TOML)(nil)
 
 func New(config configurator.ConfigImplementer) *TOML {
 	return &TOML{
@@ -20,4 +20,8 @@ func New(config configurator.ConfigImplementer) *TOML {
 
 type TOML struct {
 	configurator.ConfigFileType
+}
+
+func (t TOML) String() string {
+	return "TOML configurator"
 }
