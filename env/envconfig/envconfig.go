@@ -1,12 +1,14 @@
 package envconfig
 
 import (
+	"strings"
+
 	"github.com/kelseyhightower/envconfig"
 
 	"github.com/matthewhartstonge/configurator"
 )
 
-var _ configurator.ConfigImplementer = (*EnvConfig)(nil)
+var _ configurator.ConfigTypeable = (*EnvConfig)(nil)
 
 func New(config configurator.ConfigImplementer) *EnvConfig {
 	return &EnvConfig{
@@ -20,6 +22,10 @@ type EnvConfig struct {
 	configurator.ConfigType
 }
 
-func (e *EnvConfig) Parse(cfg *configurator.Config) error {
-	return envconfig.Process(cfg.AppName, e.Config)
+func (e EnvConfig) String() string {
+	return "EnvConfig configurator"
+}
+
+func (e *EnvConfig) Parse(cfg *configurator.Config) (string, error) {
+	return strings.ToTitle(cfg.AppName), envconfig.Process(cfg.AppName, e.Config)
 }
