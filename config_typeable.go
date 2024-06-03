@@ -1,8 +1,14 @@
 package configurator
 
-import "github.com/matthewhartstonge/configurator/diag"
+import (
+	"fmt"
+
+	"github.com/matthewhartstonge/configurator/diag"
+)
 
 type ConfigTypeable interface {
+	fmt.Stringer
+
 	ConfigParser
 	ConfigImplementer
 }
