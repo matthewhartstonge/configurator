@@ -14,6 +14,6 @@ type ConfigParser interface {
 }
 
 type ConfigImplementer interface {
-	Validate() error
+	Validate(component diag.Component) diag.Diagnostics
 	Merge(config any) any
 }

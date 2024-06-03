@@ -113,9 +113,7 @@ func processConfig(cfg *Config, configurer ConfigTypeable, diags []error) (*Conf
 		diags = append(diags, err)
 	}
 
-	if err := configurer.Validate(); err != nil {
-		diags = append(diags, err)
-	}
+	diags.Append(configurer.Validate(component)...)
 
 	cfg.Domain = configurer.Merge(cfg.Domain)
 

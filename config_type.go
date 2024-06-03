@@ -13,8 +13,10 @@ type ConfigType struct {
 // configuration. If any errors are found it aims to provide clear user
 // instruction as to where errors were encountered and how one would go about
 // fixing it.
-func (c *ConfigType) Validate() error {
-	return c.Config.Validate()
+// A component is provided so that file configurators can pass through if it is
+// global or local configuration.
+func (c *ConfigType) Validate(component diag.Component) diag.Diagnostics {
+	return c.Config.Validate(component)
 }
 
 // Merge expects the implementor to merge the parsed configuration from the
