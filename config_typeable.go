@@ -12,7 +12,11 @@ type ConfigFileParser interface {
 }
 
 type ConfigParser interface {
-	Parse(cfg *Config) error
+	// Parse returns the direct file path of the file that was parsed and any
+	// associated errors returned from parsing the file.
+	Parse(cfg *Config) (string, error)
+	// Values returns the current state of the configuration values.
+	Values() any
 }
 
 type ConfigImplementer interface {
