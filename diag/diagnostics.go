@@ -30,6 +30,13 @@ func (d *Diagnostics) Flag(path string) *Builder {
 	return d.builder(ComponentFlag, path)
 }
 
+// FromComponent enables taking in a component enum to build up a diagnostic
+// message.
+func (d *Diagnostics) FromComponent(component Component, path string) *Builder {
+	return d.builder(component, path)
+}
+
+// builder returns a diagnostic builder API for creating a diagnostic message.
 func (d *Diagnostics) builder(component Component, path string) *Builder {
 	return &Builder{
 		d: d,
