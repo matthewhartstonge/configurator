@@ -43,6 +43,9 @@ func (d *Diagnostics) FromComponent(component Component, path string) *Builder {
 
 // builder returns a diagnostic builder API for creating a diagnostic message.
 func (d *Diagnostics) builder(component Component, path string) *Builder {
+	if d == nil {
+		d = &Diagnostics{}
+	}
 	return &Builder{
 		d: d,
 		e: &Diagnostic{Component: component, Path: path},
