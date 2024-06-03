@@ -5,6 +5,11 @@ type Diagnostics []Diagnostic
 
 // Append adds a number of new diagnostic entries to the diagnostics.
 func (d *Diagnostics) Append(diags ...Diagnostic) {
+	if len(diags) == 0 {
+		// Nothing to append!
+		return
+	}
+
 	*d = append(*d, diags...)
 }
 
