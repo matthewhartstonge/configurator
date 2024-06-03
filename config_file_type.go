@@ -1,8 +1,18 @@
 package configurator
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
+
+	"github.com/matthewhartstonge/configurator/diag"
+)
+
+var (
+	_ ConfigParser      = (*ConfigFileType)(nil)
+	_ ConfigFileParser  = (*ConfigFileType)(nil)
+	_ ConfigImplementer = (*ConfigFileType)(nil)
 )
 
 // NewConfigFileType provides most functionality required to support a new file
@@ -62,11 +72,11 @@ func (f *ConfigFileType) Stat(diags *diag.Diagnostics, component diag.Component,
 
 // Parse reads the file based on the generated path computed from Stat and
 // unmarshals it into the Config field.
-func (f *ConfigFileType) Parse(_ *Config) error {
+func (f *ConfigFileType) Parse(_ *Config) (string, error) {
 	file, err := os.ReadFile(f.Path)
 	if err != nil {
-		return err
+		return f.Path, err
 	}
 
-	return f.unmarshaler(file, f.Config)
+	return f.Path, f.unmarshaler(file, f.Config)
 }
