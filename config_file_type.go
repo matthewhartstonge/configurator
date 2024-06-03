@@ -40,15 +40,23 @@ type ConfigFileType struct {
 	ConfigType
 }
 
-// Stat checks if the file exists and computes the platform specific Path.
-func (f *ConfigFileType) Stat(cfg *Config, dirPath string) bool {
+// Stat checks if the file exists and computes the platform specific Path and
+// directly writes to the provided diagnostics.
+func (f *ConfigFileType) Stat(diags *diag.Diagnostics, component diag.Component, cfg *Config, dirPath string) bool {
 	for _, ext := range f.Extensions {
 		cfgFilePath := dirPath + string(filepath.Separator) + cfg.FileName + "." + ext
 		if _, err := os.Stat(cfgFilePath); err == nil {
 			f.Path = cfgFilePath
+			diags.FromComponent(component, dirPath).
+				Trace("Config File Found",
+					fmt.Sprintf("Will attempt to parse %s", cfgFilePath))
 			return true
 		}
 	}
+
+	diags.FromComponent(component, dirPath).
+		Trace("Config File Not Found",
+			fmt.Sprintf("Unable to find config file for extensions {%s} at %s", strings.Join(f.Extensions, ", "), dirPath))
 	return false
 }
 

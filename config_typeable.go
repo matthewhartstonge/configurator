@@ -1,12 +1,14 @@
 package configurator
 
+import "github.com/matthewhartstonge/configurator/diag"
+
 type ConfigTypeable interface {
 	ConfigParser
 	ConfigImplementer
 }
 
-type FileParser interface {
-	Stat(cfg *Config, dirPath string) bool
+type ConfigFileParser interface {
+	Stat(diags *diag.Diagnostics, component diag.Component, cfg *Config, dirPath string) bool
 }
 
 type ConfigParser interface {
