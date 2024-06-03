@@ -74,5 +74,5 @@ func main() {
 ## Todo
 
 - [ ] CLI Flag parsing
-- [ ] Structured diagnostic error reporting
 - [ ] Full documentation for developer happiness
+  - [ ] What are the interfaces required to be implemented? 
