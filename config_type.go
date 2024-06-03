@@ -1,5 +1,7 @@
 package configurator
 
+import "github.com/matthewhartstonge/configurator/diag"
+
 var _ ConfigImplementer = (*ConfigType)(nil)
 
 // ConfigType provides an abstract struct (née abstract base class) to compose
@@ -7,6 +9,14 @@ var _ ConfigImplementer = (*ConfigType)(nil)
 type ConfigType struct {
 	// Config provides
 	Config ConfigImplementer
+}
+
+// Values implements ConfigParser for returning the underlying parsed values.
+func (c *ConfigType) Values() any {
+	if c.Config == nil {
+		return nil
+	}
+	return c.Config
 }
 
 // Validate expects the implementor to return any errors found in the parsed
