@@ -27,7 +27,7 @@ type HCL struct {
 	configurator.ConfigFileType
 }
 
-func (h HCL) String() string {
+func (h HCL) Type() string {
 	return "HCL Configurator"
 }
 

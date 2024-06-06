@@ -50,6 +50,11 @@ type ConfigFileType struct {
 	ConfigType
 }
 
+// Type returns which parser is in use.
+func (f *ConfigFileType) Type() string {
+	return "Not Implemented"
+}
+
 // Stat checks if the file exists and computes the platform specific Path and
 // directly writes to the provided diagnostics.
 func (f *ConfigFileType) Stat(diags *diag.Diagnostics, component diag.Component, cfg *Config, dirPath string) bool {
