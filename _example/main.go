@@ -11,6 +11,7 @@ import (
 	"github.com/matthewhartstonge/configurator/file/json"
 	"github.com/matthewhartstonge/configurator/file/toml"
 	"github.com/matthewhartstonge/configurator/file/yaml"
+	"github.com/matthewhartstonge/configurator/flag/flag"
 )
 
 type DomainConfig struct {
@@ -38,7 +39,7 @@ func main() {
 			hcl.New(&ExampleFileConfig{}),
 		},
 		Env:  envconfig.New(&ExampleEnvConfig{}),
-		Flag: nil,
+		Flag: flag.New(&ExampleFlagConfig{}),
 	}
 
 	// Calling `New` implicitly parses the configuration. If you want to
