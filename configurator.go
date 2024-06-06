@@ -77,6 +77,8 @@ func (c *Config) Parse() (*Config, diag.Diagnostics) {
 	}
 	c.parsed = nil
 
+	// TODO: check for config filepath provided by flags
+
 	// Process OS application directory configuration files.
 	c, diags = processFileConfig(diags, diag.ComponentGlobalFile, c)
 
