@@ -192,7 +192,7 @@ func processConfig(diags diag.Diagnostics, component diag.Component, cfg *Config
 	path, err := configurer.Parse(cfg)
 	if err != nil {
 		// Low-level parsing issue
-		diags.FromComponent(component, configurer.String()).
+		diags.FromComponent(component, configurer.Type()).
 			Error(fmt.Sprintf("Error parsing %s configuration", component),
 				err.Error())
 		return cfg, diags

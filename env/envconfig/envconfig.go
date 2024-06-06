@@ -22,7 +22,7 @@ type EnvConfig struct {
 	configurator.ConfigType
 }
 
-func (e EnvConfig) String() string {
+func (e EnvConfig) Type() string {
 	return "EnvConfig configurator"
 }
 

@@ -22,6 +22,6 @@ type YAML struct {
 	configurator.ConfigFileType
 }
 
-func (y YAML) String() string {
+func (y YAML) Type() string {
 	return "YAML configurator"
 }

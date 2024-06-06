@@ -22,6 +22,6 @@ type TOML struct {
 	configurator.ConfigFileType
 }
 
-func (t TOML) String() string {
+func (t TOML) Type() string {
 	return "TOML configurator"
 }

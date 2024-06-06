@@ -22,6 +22,6 @@ type JSON struct {
 	configurator.ConfigFileType
 }
 
-func (j JSON) String() string {
+func (j JSON) Type() string {
 	return "JSON configurator"
 }
