@@ -7,7 +7,7 @@ import (
 
 	"github.com/matthewhartstonge/configurator"
 	"github.com/matthewhartstonge/configurator/diag"
-	stdflag "github.com/matthewhartstonge/configurator/flag/stdflag"
+	"github.com/matthewhartstonge/configurator/flag/stdflag"
 )
 
 var _ configurator.ConfigParser = (*ExampleFlagConfig)(nil)

@@ -1,9 +1,10 @@
 package main
 
 import (
+	"strconv"
+
 	"github.com/matthewhartstonge/configurator"
 	"github.com/matthewhartstonge/configurator/diag"
-	"strconv"
 )
 
 var _ configurator.ConfigImplementer = (*ExampleEnvConfig)(nil)
