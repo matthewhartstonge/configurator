@@ -1,6 +1,7 @@
 package main
 
 import (
+	"strconv"
 	"time"
 
 	"github.com/matthewhartstonge/configurator"
@@ -21,11 +22,19 @@ type ExampleFileConfig struct {
 func (e *ExampleFileConfig) Validate(component diag.Component) diag.Diagnostics {
 	var diags diag.Diagnostics
 	if e.MyApp.Port < 0 || e.MyApp.Port > 65535 {
-		diags.FromComponent(component, "PORT").
-			Error("Unable to parse port", "Port must be between 0 and 65535")
+		diags.FromComponent(component, "myapp.port").
+			Error("Unable to parse port",
+				"Port must be between 0 and 65535, but instead got "+strconv.Itoa(e.MyApp.Port))
+		e.MyApp.Port = 0
+	}
+	if e.MyApp.BackupFrequency < 0 {
+		diags.FromComponent(component, "myapp.backupFrequency").
+			Error("Unable to parse backup frequency",
+				"Backup frequency should be provided in hours and should be non-negative, but got "+strconv.Itoa(e.MyApp.BackupFrequency))
+		e.MyApp.BackupFrequency = 0
 	}
 
-	return nil
+	return diags
 }
 
 func (e *ExampleFileConfig) Merge(d any) any {

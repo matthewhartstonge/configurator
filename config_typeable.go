@@ -9,11 +9,6 @@ type ConfigTypeable interface {
 	ConfigImplementer
 }
 
-type ConfigFileParser interface {
-	// Stat returns false if a file can't be found by the parser.
-	Stat(diags *diag.Diagnostics, component diag.Component, cfg *Config, dirPath string) bool
-}
-
 type ConfigParser interface {
 	// Type informs the user as to which parser is being used.
 	Type() string

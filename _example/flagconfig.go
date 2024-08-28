@@ -2,54 +2,56 @@ package main
 
 import (
 	"flag"
+	"strconv"
 	"time"
 
 	"github.com/matthewhartstonge/configurator"
 	"github.com/matthewhartstonge/configurator/diag"
+	stdflag "github.com/matthewhartstonge/configurator/flag/stdflag"
 )
 
-var _ configurator.ConfigImplementer = (*ExampleFileConfig)(nil)
-
-func init() { // TODO: plug this into configurator via a method
-	flag.StringVar(&flgCfg.ConfigPath, "config", "", "Provides a path to a specific config file")
-	flag.IntVar(&flgCfg.Port, "port", 0, "Defines the server port")
-	flag.IntVar(&flgCfg.BackupFrequency, "backup-frequency", 0, "Defines the frequency of backups in hours")
-}
-
-var (
-	flgCfg = &ExampleFlagConfig{} // TODO: plug this into configurator via a method
-)
+var _ configurator.ConfigParser = (*ExampleFlagConfig)(nil)
+var _ configurator.ConfigImplementer = (*ExampleFlagConfig)(nil)
+var _ configurator.ConfigFlagImplementer = (*ExampleFlagConfig)(nil)
 
 type ExampleFlagConfig struct {
-	ConfigPath      string
+	stdflag.Flag
+
 	Port            int
 	BackupFrequency int
 }
 
-func (e *ExampleFlagConfig) Validate(component diag.Component) diag.Diagnostics {
-	var diags diag.Diagnostics
-	if e.Port < 0 || e.Port > 65535 {
-		diags.FromComponent(component, "--port").
-			Error("Unable to parse port",
-				"Port must be between 0 and 65535")
-	}
-	if e.BackupFrequency < 0 {
-		diags.FromComponent(component, "--backup-frequency").
-			Error("Unable to parse backup frequency",
-				"Backup frequency should be provided in hours")
-	}
-
-	return nil
+func (f *ExampleFlagConfig) Init() {
+	flag.IntVar(&f.Port, "port", 0, "path to config file")
+	flag.IntVar(&f.BackupFrequency, "backup-frequency", 0, "path to config file")
 }
 
-func (e *ExampleFlagConfig) Merge(d any) any {
+func (f *ExampleFlagConfig) Validate(component diag.Component) diag.Diagnostics {
+	var diags diag.Diagnostics
+	if f.Port < 0 || f.Port > 65535 {
+		diags.FromComponent(component, "-port").
+			Error("Unable to parse port",
+				"Port must be between 0 and 65535, but instead got "+strconv.Itoa(f.Port))
+		f.Port = 0
+	}
+	if f.BackupFrequency < 0 {
+		diags.FromComponent(component, "-backup-frequency").
+			Error("Unable to parse backup frequency",
+				"Backup frequency should be provided in hours and be non-negative, but instead got "+strconv.Itoa(f.BackupFrequency))
+		f.BackupFrequency = 0
+	}
+
+	return diags
+}
+
+func (f *ExampleFlagConfig) Merge(d any) any {
 	cfg := d.(*DomainConfig)
 
-	if e.Port != 0 {
-		cfg.Port = uint16(e.Port)
+	if f.Port != 0 {
+		cfg.Port = uint16(f.Port)
 	}
-	if e.BackupFrequency != 0 {
-		cfg.BackupFrequency = time.Duration(e.BackupFrequency) * time.Hour
+	if f.BackupFrequency != 0 {
+		cfg.BackupFrequency = time.Duration(f.BackupFrequency) * time.Hour
 	}
 
 	return cfg
