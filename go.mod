@@ -3,7 +3,7 @@ module github.com/matthewhartstonge/configurator
 go 1.18
 
 require (
-	github.com/hashicorp/hcl/v2 v2.20.1
+	github.com/hashicorp/hcl/v2 v2.22.0
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/pelletier/go-toml/v2 v2.2.2
 	gopkg.in/yaml.v3 v3.0.1
