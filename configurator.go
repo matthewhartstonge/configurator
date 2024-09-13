@@ -105,10 +105,7 @@ func (c *Config) Parse() (*Config, diag.Diagnostics) {
 	}
 
 	// Process CLI provided flag configuration.
-	if c.Flag != nil {
-		c.Flag.Init()
-	}
-	c, diags = processConfig(diags, diag.ComponentFlag, c, c.Flag)
+	c, diags = processFlagConfig(diags, diag.ComponentFlag, c, c.Flag)
 
 	return c, diags
 }
@@ -295,6 +292,17 @@ func processFlagFilePath(diags diag.Diagnostics, cfg *Config) ([]string, diag.Di
 // configFP returns a well-formed path to an expected application directory.
 func configFP(cfg *Config, dir string) string {
 	return dir + string(filepath.Separator) + cfg.AppName
+}
+
+// processFlagConfig processes and merges in any provided flag configuration.
+func processFlagConfig(diags diag.Diagnostics, component diag.Component, cfg *Config, configurer ConfigFlagTypeable) (*Config, diag.Diagnostics) {
+	if configurer == nil {
+		return cfg, diags
+	}
+
+	configurer.Init()
+
+	return processConfig(diags, component, cfg, configurer)
 }
 
 // processConfig does the heavy lifting of parsing, validating and merging the
