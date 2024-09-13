@@ -10,7 +10,7 @@ import (
 	"github.com/matthewhartstonge/configurator/diag"
 )
 
-// New parses the config in order of precedence:
+// New calls parse and returns merged config values in order of precedence:
 //
 // 1. Command line.
 // 2. Config file that's name is declared on the command line.
@@ -86,56 +86,54 @@ func (c *Config) Parse() (*Config, diag.Diagnostics) {
 	}
 	c.parsed = nil
 
-	// todo: make the following processX functions private methods
-
-	c, diags = processFileFlagConfig(diags, c)
+	diags = c.processFileFlagConfig(diags)
 
 	if c.ConfigFilePath != "" {
 		// Process OS application directory configuration files.
-		c, diags = processFileConfig(diags, diag.ComponentFlagFile, c)
+		diags = c.processFileConfig(diags, diag.ComponentFlagFile)
 	} else {
 		// Process OS application directory configuration files.
-		c, diags = processFileConfig(diags, diag.ComponentGlobalFile, c)
+		diags = c.processFileConfig(diags, diag.ComponentGlobalFile)
 
 		// Process current working directory configuration files.
-		c, diags = processFileConfig(diags, diag.ComponentLocalFile, c)
+		diags = c.processFileConfig(diags, diag.ComponentLocalFile)
 
 		// Process environment variable configuration.
-		c, diags = processConfig(diags, diag.ComponentEnvVar, c, c.Env)
+		diags = c.processConfig(diags, diag.ComponentEnvVar, c.Env)
 	}
 
 	// Process CLI provided flag configuration.
-	c, diags = processFlagConfig(diags, diag.ComponentFlag, c, c.Flag)
+	diags = c.processFlagConfig(diags, diag.ComponentFlag)
 
 	return c, diags
 }
 
 // processFileFlagConfig extracts the path to a config file, if specified via
 // the customisable `-config-file` flag.
-func processFileFlagConfig(diags diag.Diagnostics, cfg *Config) (*Config, diag.Diagnostics) {
-	if cfg.FileFlag == "" {
-		cfg.FileFlag = DEFAULT_CONFIG_FILEFLAG
+func (c *Config) processFileFlagConfig(diags diag.Diagnostics) diag.Diagnostics {
+	if c.FileFlag == "" {
+		c.FileFlag = DEFAULT_CONFIG_FILEFLAG
 	}
 
 	// fully-qualified file flag.
-	fqFileFlag := "-" + cfg.FileFlag
+	fqFileFlag := "-" + c.FileFlag
 
 	// manually extract the value for the set config file flag.
-	v, ok := getFlagValue(cfg.FileFlag)
+	v, ok := getFlagValue(c.FileFlag)
 	if !ok {
 		diags.FlagFile(fqFileFlag).
 			Trace("CLI specified config file path not set",
 				"Either the value was never set, or an empty string was provided")
-		return cfg, diags
+		return diags
 	}
 
-	cfg.ConfigFilePath = v
-	diags.FlagFile(fqFileFlag).Trace("CLI specified config file path added", cfg.ConfigFilePath)
+	c.ConfigFilePath = v
+	diags.FlagFile(fqFileFlag).Trace("CLI specified config file path added", c.ConfigFilePath)
 
 	// Remove the flag from os.Args
-	removeFlagFromArgs(cfg.FileFlag)
+	removeFlagFromArgs(c.FileFlag)
 
-	return cfg, diags
+	return diags
 }
 
 // getFlagValue extracts the provided flag name from os.Args manually.
@@ -175,22 +173,22 @@ func removeFlagFromArgs(name string) {
 }
 
 // processFileConfig iterates through the provided file type parsers, stating the file.
-func processFileConfig(diags diag.Diagnostics, component diag.Component, cfg *Config) (*Config, diag.Diagnostics) {
-	paths, diags := getConfigPaths(diags, component, cfg)
+func (c *Config) processFileConfig(diags diag.Diagnostics, component diag.Component) diag.Diagnostics {
+	paths, diags := getConfigPaths(diags, component, c)
 
 	for _, path := range paths {
-		for _, fileConfig := range cfg.File {
-			if !fileConfig.Stat(&diags, component, cfg, path) {
+		for _, fileConfig := range c.File {
+			if !fileConfig.Stat(&diags, component, c, path) {
 				// If we can't find the file, skip it.
 				continue
 			}
 
 			// process the first found config file based on file type priority.
-			return processConfig(diags, component, cfg, fileConfig)
+			return c.processConfig(diags, component, fileConfig)
 		}
 	}
 
-	return cfg, diags
+	return diags
 }
 
 // getConfigPaths returns file paths to the configuration directory.
@@ -295,43 +293,43 @@ func configFP(cfg *Config, dir string) string {
 }
 
 // processFlagConfig processes and merges in any provided flag configuration.
-func processFlagConfig(diags diag.Diagnostics, component diag.Component, cfg *Config, configurer ConfigFlagTypeable) (*Config, diag.Diagnostics) {
-	if configurer == nil {
-		return cfg, diags
+func (c *Config) processFlagConfig(diags diag.Diagnostics, component diag.Component) diag.Diagnostics {
+	if c.Flag == nil {
+		return diags
 	}
 
-	configurer.Init()
+	c.Flag.Init()
 
-	return processConfig(diags, component, cfg, configurer)
+	return c.processConfig(diags, component, c.Flag)
 }
 
 // processConfig does the heavy lifting of parsing, validating and merging the
 // config together returning diagnostic information at the end of the process.
-func processConfig(diags diag.Diagnostics, component diag.Component, cfg *Config, configurer ConfigTypeable) (*Config, diag.Diagnostics) {
+func (c *Config) processConfig(diags diag.Diagnostics, component diag.Component, configurer ConfigTypeable) diag.Diagnostics {
 	if configurer == nil {
 		// no parser provided, may be expected, for example, if CLI flags aren't implemented.
 		diags.FromComponent(component, "").
 			Trace("No configurator provided",
 				fmt.Sprintf("Error attempting to parse %s configuration", component))
-		return cfg, diags
+		return diags
 	}
 
-	path, err := configurer.Parse(cfg)
+	path, err := configurer.Parse(c)
 	if err != nil {
 		// Low-level parsing issue
 		diags.FromComponent(component, configurer.Type()).
 			Error(fmt.Sprintf("Error parsing %s configuration", component),
 				err.Error())
-		return cfg, diags
+		return diags
 	}
 
-	cfg.appendParsedConfig(component, path, configurer.Values())
+	c.appendParsedConfig(component, path, configurer.Values())
 
 	diags.Append(configurer.Validate(component)...)
 
-	cfg.Domain = configurer.Merge(cfg.Domain)
+	c.Domain = configurer.Merge(c.Domain)
 
-	return cfg, diags
+	return diags
 }
 
 // appendParsedConfig injects parsed config values for later perusal.
