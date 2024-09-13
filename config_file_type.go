@@ -19,12 +19,12 @@ var (
 // type. If manual unmarshaling is required, the Unmarshaler can be provided.
 func NewConfigFileType(
 	config ConfigImplementer,
-	fileExtensions []string,
+	fileTypes []string,
 	unmarshaler Unmarshaler,
 ) ConfigFileType {
 	return ConfigFileType{
 		unmarshaler: unmarshaler,
-		Extensions:  fileExtensions,
+		Types:       fileTypes,
 		ConfigType: ConfigType{
 			Config: config,
 		},
@@ -43,8 +43,9 @@ type ConfigFileType struct {
 	unmarshaler Unmarshaler
 	// Path is the path to the file that will be read and unmarshaled.
 	Path string
-	// Extensions is a list of file extensions that the provider will look for.
-	Extensions []string
+	// Types is a list of file types or dot extensions that the provider
+	// is able to process.
+	Types []string
 
 	// ConfigType is the embedded configurator.ConfigType.
 	ConfigType
@@ -57,21 +58,58 @@ func (f *ConfigFileType) Type() string {
 
 // Stat checks if the file exists and computes the platform specific Path and
 // directly writes to the provided diagnostics.
-func (f *ConfigFileType) Stat(diags *diag.Diagnostics, component diag.Component, cfg *Config, dirPath string) bool {
-	for _, ext := range f.Extensions {
-		cfgFilePath := dirPath + string(filepath.Separator) + cfg.FileName + "." + ext
+func (f *ConfigFileType) Stat(diags *diag.Diagnostics, component diag.Component, cfg *Config, filePath string) bool {
+	// todo: tidy `ConfigFileType.Stat` implementation. there should be a better way.
+	filename := filepath.Base(filePath)
+	fileExt := filepath.Ext(filePath)
+	for _, fileType := range f.Types {
+		// stat for full paths, if provided.
+		if fileExt != "" {
+			if fileExt != "."+fileType {
+				// full file path provided, ext does match provider file type - skip.
+				diags.FromComponent(component, filePath).
+					Trace("Skipping File Type",
+						"The file type does not match "+fileType)
+				continue
+			}
+
+			// stat full path!
+			info, err := os.Stat(filePath)
+			if err != nil {
+				diags.FromComponent(component, filePath).
+					Trace("Config File Not Found",
+						"No config file was found at the specified path, error: "+err.Error())
+				return false
+			}
+
+			if info.IsDir() {
+				// y u disguised as file...
+				continue
+			}
+
+			// specified config file exists for the given file parser!
+			f.Path = filePath
+			diags.FromComponent(component, filePath).
+				Trace("Config File Found",
+					fmt.Sprintf("Will attempt to parse %s", filename))
+			return true
+		}
+
+		// Dynamically build the expected config file path that can be parsed
+		// with this provider to check for files existence.
+		cfgFilePath := filePath + string(filepath.Separator) + cfg.FileName + "." + filePath
 		if _, err := os.Stat(cfgFilePath); err == nil {
 			f.Path = cfgFilePath
-			diags.FromComponent(component, dirPath).
+			diags.FromComponent(component, filePath).
 				Trace("Config File Found",
 					fmt.Sprintf("Will attempt to parse %s", cfgFilePath))
 			return true
 		}
 	}
 
-	diags.FromComponent(component, dirPath).
+	diags.FromComponent(component, filePath).
 		Trace("Config File Not Found",
-			fmt.Sprintf("Unable to find config file for extensions {%s} at %s", strings.Join(f.Extensions, ", "), dirPath))
+			fmt.Sprintf("Unable to find config file for extensions {%s} at %s", strings.Join(f.Types, ", "), filePath))
 	return false
 }
 

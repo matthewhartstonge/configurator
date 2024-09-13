@@ -11,6 +11,7 @@ import (
 	"github.com/matthewhartstonge/configurator/file/json"
 	"github.com/matthewhartstonge/configurator/file/toml"
 	"github.com/matthewhartstonge/configurator/file/yaml"
+	"github.com/matthewhartstonge/configurator/flag/stdflag"
 )
 
 type DomainConfig struct {
@@ -31,14 +32,14 @@ func main() {
 	cfg := &configurator.Config{
 		AppName: "ExampleApp",
 		Domain:  defaults,
-		File: []configurator.ConfigTypeable{
+		File: []configurator.ConfigFileTypeable{
 			yaml.New(&ExampleFileConfig{}),
 			toml.New(&ExampleFileConfig{}),
 			json.New(&ExampleFileConfig{}),
 			hcl.New(&ExampleFileConfig{}),
 		},
 		Env:  envconfig.New(&ExampleEnvConfig{}),
-		Flag: nil,
+		Flag: stdflag.New(&ExampleFlagConfig{}),
 	}
 
 	// Calling `New` implicitly parses the configuration. If you want to

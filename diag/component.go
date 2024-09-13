@@ -17,6 +17,9 @@ const (
 	ComponentEnvVar
 	// ComponentFlag states that the diagnostic comes from a cli flag.
 	ComponentFlag
+	// ComponentFlagFile states that the diagnostic comes from a CLI specified
+	// config file.
+	ComponentFlagFile
 )
 
 func (c Component) String() string {
@@ -29,6 +32,8 @@ func (c Component) String() string {
 		return "Environment Variable"
 	case ComponentFlag:
 		return "CLI Flag"
+	case ComponentFlagFile:
+		return "CLI Specified Config File"
 	default:
 		return "Invalid"
 	}

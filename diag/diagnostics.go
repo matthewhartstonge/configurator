@@ -35,6 +35,12 @@ func (d *Diagnostics) Flag(path string) *Builder {
 	return d.builder(ComponentFlag, path)
 }
 
+// FlagFile enables building up a diagnostic message for a CLI specified config
+// file value.
+func (d *Diagnostics) FlagFile(path string) *Builder {
+	return d.builder(ComponentFlagFile, path)
+}
+
 // FromComponent enables taking in a component enum to build up a diagnostic
 // message.
 func (d *Diagnostics) FromComponent(component Component, path string) *Builder {
