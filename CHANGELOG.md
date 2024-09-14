@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.0](https://github.com/matthewhartstonge/configurator/compare/v0.1.0...v0.2.0) (2024-09-13)
+
+
+### Features
+
+* **flag:** cli flag support. ([#13](https://github.com/matthewhartstonge/configurator/issues/13)) ([692ceef](https://github.com/matthewhartstonge/configurator/commit/692ceefb0d66e9f63756e3ae2b9788f1e8872619))
+
 ## 0.1.0 (2024-06-19)
 
 
