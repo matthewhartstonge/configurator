@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/matthewhartstonge/configurator/compare/v0.2.0...v0.3.0) (2024-11-28)
+
+
+### Features
+
+* **diag:** migrates `Diagnostics` to a struct to track error state. ([b4931a5](https://github.com/matthewhartstonge/configurator/commit/b4931a54e91eaeaa8c65182ad7d936f125ec3462))
+
 ## [0.2.0](https://github.com/matthewhartstonge/configurator/compare/v0.1.0...v0.2.0) (2024-09-13)
 
 
