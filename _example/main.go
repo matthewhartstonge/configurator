@@ -51,8 +51,8 @@ func main() {
 
 	// Our diagnostics can be read to see every little step taken, file read and
 	// what wasn't able to parse.
-	if diags != nil {
-		fmt.Printf("\nConfiguration diagnostics:\n%s\n\n", diags)
+	if diags.Len() > 0 {
+		fmt.Printf("\nConfiguration diagnostics:\n%s\n\n", diags.All())
 	}
 
 	// If we want to read the underlying processed values for every file, envvar
