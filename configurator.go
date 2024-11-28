@@ -21,7 +21,7 @@ import (
 // To be clear, this means config files are searched for and read first, then
 // environment variables are merged in over the top, then command line flags as
 // the highest priority.
-func New(config *Config) (*Config, diag.Diagnostics) {
+func New(config *Config) (*Config, *diag.Diagnostics) {
 	return config.Parse()
 }
 
@@ -77,8 +77,8 @@ type ParsedConfig struct {
 }
 
 // Parse processes the
-func (c *Config) Parse() (*Config, diag.Diagnostics) {
-	var diags diag.Diagnostics
+func (c *Config) Parse() (*Config, *diag.Diagnostics) {
+	diags := new(diag.Diagnostics)
 
 	// default filename to 'config' if not provided.
 	if c.FileName == "" {
@@ -110,7 +110,7 @@ func (c *Config) Parse() (*Config, diag.Diagnostics) {
 
 // processFileFlagConfig extracts the path to a config file, if specified via
 // the customisable `-config-file` flag.
-func (c *Config) processFileFlagConfig(diags diag.Diagnostics) diag.Diagnostics {
+func (c *Config) processFileFlagConfig(diags *diag.Diagnostics) *diag.Diagnostics {
 	if c.FileFlag == "" {
 		c.FileFlag = DEFAULT_CONFIG_FILEFLAG
 	}
@@ -173,12 +173,12 @@ func removeFlagFromArgs(name string) {
 }
 
 // processFileConfig iterates through the provided file type parsers, stating the file.
-func (c *Config) processFileConfig(diags diag.Diagnostics, component diag.Component) diag.Diagnostics {
+func (c *Config) processFileConfig(diags *diag.Diagnostics, component diag.Component) *diag.Diagnostics {
 	paths, diags := getConfigPaths(diags, component, c)
 
 	for _, path := range paths {
 		for _, fileConfig := range c.File {
-			if !fileConfig.Stat(&diags, component, c, path) {
+			if !fileConfig.Stat(diags, component, c, path) {
 				// If we can't find the file, skip it.
 				continue
 			}
@@ -192,7 +192,7 @@ func (c *Config) processFileConfig(diags diag.Diagnostics, component diag.Compon
 }
 
 // getConfigPaths returns file paths to the configuration directory.
-func getConfigPaths(diags diag.Diagnostics, component diag.Component, cfg *Config) ([]string, diag.Diagnostics) {
+func getConfigPaths(diags *diag.Diagnostics, component diag.Component, cfg *Config) ([]string, *diag.Diagnostics) {
 	if pathStrategy, ok := configFilePathStrategies[component]; ok {
 		return pathStrategy(diags, cfg)
 	}
@@ -208,7 +208,7 @@ func getConfigPaths(diags diag.Diagnostics, component diag.Component, cfg *Confi
 		)
 }
 
-type configFilePathStrategy func(diags diag.Diagnostics, cfg *Config) ([]string, diag.Diagnostics)
+type configFilePathStrategy func(diags *diag.Diagnostics, cfg *Config) ([]string, *diag.Diagnostics)
 
 var configFilePathStrategies = map[diag.Component]configFilePathStrategy{
 	diag.ComponentGlobalFile: processGlobalFilePaths,
@@ -216,7 +216,7 @@ var configFilePathStrategies = map[diag.Component]configFilePathStrategy{
 	diag.ComponentFlagFile:   processFlagFilePath,
 }
 
-func processGlobalFilePaths(diags diag.Diagnostics, cfg *Config) ([]string, diag.Diagnostics) {
+func processGlobalFilePaths(diags *diag.Diagnostics, cfg *Config) ([]string, *diag.Diagnostics) {
 	var paths []string
 
 	if runtime.GOOS == "linux" {
@@ -241,7 +241,7 @@ func processGlobalFilePaths(diags diag.Diagnostics, cfg *Config) ([]string, diag
 	return paths, diags
 }
 
-func processLocalFilePaths(diags diag.Diagnostics, cfg *Config) ([]string, diag.Diagnostics) {
+func processLocalFilePaths(diags *diag.Diagnostics, cfg *Config) ([]string, *diag.Diagnostics) {
 	var paths []string
 
 	if dir, err := os.UserHomeDir(); err != nil {
@@ -269,7 +269,7 @@ func processLocalFilePaths(diags diag.Diagnostics, cfg *Config) ([]string, diag.
 	return paths, diags
 }
 
-func processFlagFilePath(diags diag.Diagnostics, cfg *Config) ([]string, diag.Diagnostics) {
+func processFlagFilePath(diags *diag.Diagnostics, cfg *Config) ([]string, *diag.Diagnostics) {
 	if cfg.ConfigFilePath == "" {
 		return []string{}, diags
 	}
@@ -293,7 +293,7 @@ func configFP(cfg *Config, dir string) string {
 }
 
 // processFlagConfig processes and merges in any provided flag configuration.
-func (c *Config) processFlagConfig(diags diag.Diagnostics, component diag.Component) diag.Diagnostics {
+func (c *Config) processFlagConfig(diags *diag.Diagnostics, component diag.Component) *diag.Diagnostics {
 	if c.Flag == nil {
 		return diags
 	}
@@ -305,7 +305,7 @@ func (c *Config) processFlagConfig(diags diag.Diagnostics, component diag.Compon
 
 // processConfig does the heavy lifting of parsing, validating and merging the
 // config together returning diagnostic information at the end of the process.
-func (c *Config) processConfig(diags diag.Diagnostics, component diag.Component, configurer ConfigTypeable) diag.Diagnostics {
+func (c *Config) processConfig(diags *diag.Diagnostics, component diag.Component, configurer ConfigTypeable) *diag.Diagnostics {
 	if configurer == nil {
 		// no parser provided, may be expected, for example, if CLI flags aren't implemented.
 		diags.FromComponent(component, "").

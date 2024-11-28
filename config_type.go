@@ -25,7 +25,7 @@ func (c *ConfigType) Values() any {
 // fixing it.
 // A component is provided so that file configurators can pass through if it is
 // global or local configuration.
-func (c *ConfigType) Validate(component diag.Component) diag.Diagnostics {
+func (c *ConfigType) Validate(component diag.Component) *diag.Diagnostics {
 	return c.Config.Validate(component)
 }
 
