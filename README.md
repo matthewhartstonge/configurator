@@ -59,7 +59,7 @@ func main() {
 			hcl.New(&FileConfig{}),
 		},
 		Env:  envconfig.New(&EnvConfig{}),
-        Flag: stdflag.New(&FlagConfig{}),
+		Flag: stdflag.New(&FlagConfig{}),
 	}
 	config, err := configurator.New(cfg)
 	if err != nil {
