@@ -38,7 +38,6 @@ package main
 
 import (
     "fmt"
-    "time"
     
     "github.com/matthewhartstonge/configurator"
     "github.com/matthewhartstonge/configurator/env/envconfig"
@@ -46,6 +45,7 @@ import (
     "github.com/matthewhartstonge/configurator/file/json"
     "github.com/matthewhartstonge/configurator/file/toml"
     "github.com/matthewhartstonge/configurator/file/yaml"
+    "github.com/matthewhartstonge/configurator/flag/stdflag"
 )
 
 func main() {
@@ -59,7 +59,7 @@ func main() {
 			hcl.New(&FileConfig{}),
 		},
 		Env:  envconfig.New(&EnvConfig{}),
-		Flag: nil, // TODO: implement flag parsers
+        Flag: stdflag.New(&FlagConfig{}),
 	}
 	config, err := configurator.New(cfg)
 	if err != nil {
@@ -73,6 +73,5 @@ func main() {
 
 ## Todo
 
-- [ ] CLI Flag parsing
 - [ ] Full documentation for developer happiness
-  - [ ] What are the interfaces required to be implemented? 
+  - [ ] What are the interfaces required to be implemented?
