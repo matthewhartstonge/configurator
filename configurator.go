@@ -325,7 +325,7 @@ func (c *Config) processConfig(diags diag.Diagnostics, component diag.Component,
 
 	c.appendParsedConfig(component, path, configurer.Values())
 
-	diags.Append(configurer.Validate(component)...)
+	diags.Merge(configurer.Validate(component))
 
 	c.Domain = configurer.Merge(c.Domain)
 
