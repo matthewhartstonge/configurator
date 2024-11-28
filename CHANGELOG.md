@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.1](https://github.com/matthewhartstonge/configurator/compare/v0.3.0...v0.3.1) (2024-11-28)
+
+
+### Bug Fixes
+
+* makes diagnostic methods chainable again. ([a72c897](https://github.com/matthewhartstonge/configurator/commit/a72c897312e22d44a8356905e7a4b2b3c3f5f539))
+
 ## [0.3.0](https://github.com/matthewhartstonge/configurator/compare/v0.2.0...v0.3.0) (2024-11-28)
 
 
