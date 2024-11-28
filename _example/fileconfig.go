@@ -19,8 +19,8 @@ type ExampleFileConfig struct {
 	} `hcl:"app,block" json:"myapp" toml:"MyApp" yaml:"myapp"`
 }
 
-func (e *ExampleFileConfig) Validate(component diag.Component) diag.Diagnostics {
-	var diags diag.Diagnostics
+func (e *ExampleFileConfig) Validate(component diag.Component) *diag.Diagnostics {
+	diags := new(diag.Diagnostics)
 	if e.MyApp.Port < 0 || e.MyApp.Port > 65535 {
 		diags.FromComponent(component, "myapp.port").
 			Error("Unable to parse port",

@@ -14,8 +14,8 @@ type ExampleEnvConfig struct {
 	Port int    `envconfig:"PORT" default:"9090"`
 }
 
-func (e *ExampleEnvConfig) Validate(_ diag.Component) diag.Diagnostics {
-	var diags diag.Diagnostics
+func (e *ExampleEnvConfig) Validate(_ diag.Component) *diag.Diagnostics {
+	diags := new(diag.Diagnostics)
 	if e.Port < 0 || e.Port > 65535 {
 		diags.Env("PORT").Error("Unable to parse port",
 			"Port must be between 0 and 65535, but instead got "+strconv.Itoa(e.Port))

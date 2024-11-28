@@ -26,8 +26,8 @@ func (f *ExampleFlagConfig) Init() {
 	flag.IntVar(&f.BackupFrequency, "backup-frequency", 0, "path to config file")
 }
 
-func (f *ExampleFlagConfig) Validate(component diag.Component) diag.Diagnostics {
-	var diags diag.Diagnostics
+func (f *ExampleFlagConfig) Validate(component diag.Component) *diag.Diagnostics {
+	diags := new(diag.Diagnostics)
 	if f.Port < 0 || f.Port > 65535 {
 		diags.FromComponent(component, "-port").
 			Error("Unable to parse port",
