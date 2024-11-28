@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.2](https://github.com/matthewhartstonge/configurator/compare/v0.3.1...v0.3.2) (2024-11-28)
+
+
+### Bug Fixes
+
+* always return `*Diagnostics`. ([b2483f7](https://github.com/matthewhartstonge/configurator/commit/b2483f76d7bf06e27a88809f4c758bf27894ba44))
+
 ## [0.3.1](https://github.com/matthewhartstonge/configurator/compare/v0.3.0...v0.3.1) (2024-11-28)
 
 
