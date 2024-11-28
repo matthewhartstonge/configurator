@@ -1,7 +1,35 @@
 package diag
 
 // Diagnostics contains a report of diagnostic information.
-type Diagnostics []Diagnostic
+type Diagnostics struct {
+	// diags contains the list of diagnostic entries.
+	diags []Diagnostic
+
+	// HasFatal reports if the diagnostics have reported a fatal issue.
+	HasFatal bool
+	// HasError reports if the diagnostics have reported an error.
+	HasError bool
+	// HasWarn reports if the diagnostics have reported a warning.
+	HasWarn bool
+}
+
+// Len reports the number of diagnostic messages logged.
+func (d *Diagnostics) Len() int {
+	if d == nil {
+		return 0
+	}
+
+	return len(d.diags)
+}
+
+// All returns all diagnostic messages.
+func (d *Diagnostics) All() []Diagnostic {
+	if d == nil {
+		return nil
+	}
+
+	return d.diags
+}
 
 // Append adds a number of new diagnostic entries to the diagnostics.
 func (d *Diagnostics) Append(diags ...Diagnostic) {
@@ -10,7 +38,38 @@ func (d *Diagnostics) Append(diags ...Diagnostic) {
 		return
 	}
 
-	*d = append(*d, diags...)
+	for _, diag := range diags {
+		switch diag.Severity {
+		case SeverityFatal:
+			d.HasFatal = true
+		case SeverityError:
+			d.HasError = true
+		case SeverityWarn:
+			d.HasWarn = true
+		}
+
+		d.diags = append(d.diags, diag)
+	}
+}
+
+// Merge appends the provided diags into the diagnostics.
+func (d *Diagnostics) Merge(diags Diagnostics) {
+	if diags.Len() == 0 {
+		// Nothing to append!
+		return
+	}
+
+	if diags.HasFatal {
+		d.HasFatal = diags.HasFatal
+	}
+	if diags.HasError {
+		d.HasError = diags.HasError
+	}
+	if diags.HasWarn {
+		d.HasWarn = diags.HasWarn
+	}
+
+	d.diags = append(d.diags, diags.All()...)
 }
 
 // GlobalFile enables building up a diagnostic message for a global
@@ -90,14 +149,14 @@ func (d *Diagnostics) Traces() Diagnostics {
 
 // getDiagsWithLevel returns an array of diagnostics that match the specified
 // severity level.
-func (d Diagnostics) getDiagsWithLevel(sev Severity) Diagnostics {
+func (d *Diagnostics) getDiagsWithLevel(sev Severity) Diagnostics {
 	var diags Diagnostics
-	for _, diag := range d {
+	for _, diag := range d.diags {
 		if diag.Severity != sev {
 			continue
 		}
 
-		diags = append(diags, diag)
+		diags.Append(diag)
 	}
 
 	return diags
