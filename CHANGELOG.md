@@ -7,6 +7,15 @@
 
 * **diag:** migrates `Diagnostics` to a struct to track error state. ([b4931a5](https://github.com/matthewhartstonge/configurator/commit/b4931a54e91eaeaa8c65182ad7d936f125ec3462))
 
+#### Changes
+* Adds a number of new methods, `Len()`, `Merge(diags Diagnostics)` and `All() []Diagnostic`.
+* Adds properties `HasFatal`, `HasError` and `HasWarn` to detect if a >=error level diagnostic has been recorded.
+
+#### Migration
+* `diags = append(diags, diag)` should migrate to `diags.Append(diag)`.
+* `diags = append(diags, newDiags...)` should migrate to `diags.Merge(newDiags)`.
+* `len(diags)` should migrate to `diags.Len()`.
+
 ## [0.2.0](https://github.com/matthewhartstonge/configurator/compare/v0.1.0...v0.2.0) (2024-09-13)
 
 
