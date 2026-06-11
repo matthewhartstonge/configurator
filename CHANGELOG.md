@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.0](https://github.com/matthewhartstonge/configurator/compare/v0.3.2...v0.4.0) (2026-06-11)
+
+
+### Features
+
+* **deps:** updates to `go@v1.23.0` and bumps the default group with 2 updates ([#25](https://github.com/matthewhartstonge/configurator/issues/25)) ([9597566](https://github.com/matthewhartstonge/configurator/commit/959756635f6a7d8b0b09013d23ffc94491f58dd2))
+
 ## [0.3.2](https://github.com/matthewhartstonge/configurator/compare/v0.3.1...v0.3.2) (2024-11-28)
 
 
