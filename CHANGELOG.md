@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.1](https://github.com/matthewhartstonge/configurator/compare/v0.4.0...v0.4.1) (2026-06-24)
+
+
+### Bug Fixes
+
+* **deps:** bump github.com/pelletier/go-toml/v2 from 2.3.1 to 2.4.1 in the default group ([#27](https://github.com/matthewhartstonge/configurator/issues/27)) ([687cfc4](https://github.com/matthewhartstonge/configurator/commit/687cfc4b7dda1328e4fb612f7302479e08ec67ff))
+
 ## [0.4.0](https://github.com/matthewhartstonge/configurator/compare/v0.3.2...v0.4.0) (2026-06-11)
 
 
